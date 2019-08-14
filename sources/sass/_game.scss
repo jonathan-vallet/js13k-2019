@@ -1,0 +1,64 @@
+* {
+  margin: 0;
+  padding: 0;
+  &, 
+  &::before,
+  &::after {
+    box-sizing: border-box;
+  }
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  background: $background-color;
+}
+
+$tile-size: 20px;
+
+#game {
+  display: flex;
+  height: 100%;
+}
+
+#grid {
+  position: relative;
+  width: 15*$tile-size;
+  height: 25*$tile-size;
+  margin: auto;
+  background: #ccc;
+}
+
+.tile {
+  position: absolute;
+  display: flex;
+  width: $tile-size;
+  height: $tile-size;
+  background: #aaa;
+
+  &::before {
+    content: '';
+    display: block;
+    margin: auto;
+  }
+
+  &-1 {
+    &::before {
+      width: 50%;
+      height: 50%;
+      border: 2px solid #C44;
+    }
+  }
+  
+  &-2 {
+    &::before {
+      width: 50%;
+      height: 50%;
+      border: 2px solid #4C4;
+      border-radius: 50%;
+    }
+  }
+}
