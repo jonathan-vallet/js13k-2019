@@ -4,7 +4,7 @@
 function createTile() {
     var x = Math.floor(GRID_WIDTH / 2);
     var y = GRID_HEIGHT - 1;
-    var max = 4;
+    var max = TILE_NUMBER + 1;
     var type = Math.floor(Math.random() * (max));
     var tile = document.createElement('p');
     tile.classList.add('tile');
@@ -55,7 +55,12 @@ function moveTile() {
         grid[currentTile.x][currentTile.y] = currentTile.type;
         currentTile.tile.setAttribute('data-x', currentTile.x);
         currentTile.tile.setAttribute('data-y', currentTile.y);
-        checkLineCompletion();
+        checkLineCompletion(currentTile);
+
+        $grid.classList.remove('added-tile-speed');
+        $grid.classList.remove('added-tile');
+        void $grid.offsetWidth;
+        $grid.classList.add(isMovingDown ? 'added-tile-speed' : 'added-tile');
         createTile();
     }
 }

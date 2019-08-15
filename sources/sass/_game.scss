@@ -22,6 +22,7 @@ $tile-size: 20px;
 #game {
   display: flex;
   height: 100%;
+  overflow: hidden;
 }
 
 #grid {
@@ -29,7 +30,48 @@ $tile-size: 20px;
   width: 15*$tile-size;
   height: 25*$tile-size;
   margin: auto;
-  background: #ccc;
+  background: #4d4d4d;
+
+  &.added-tile {
+    animation: addedTile 0.2s;
+  }
+
+  &.added-tile-speed {
+    animation: addedTileSpeed 0.2s;
+  }
+}
+
+@keyframes addedTileSpeed {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes addedTile {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(1px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+#score {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #333;
+  font-size: 14px;
 }
 
 .tile {
@@ -37,7 +79,9 @@ $tile-size: 20px;
   display: flex;
   width: $tile-size;
   height: $tile-size;
-  background: #aaa;
+  border: 1px solid #6b6b6b;
+  background: #333;
+  transition: top 0.1s ease;
 
   &::before {
     content: '';
@@ -46,14 +90,30 @@ $tile-size: 20px;
   }
 
   &-0 {
-    background: #C44;
+    border: none;
+    background: #c61111;
+    
+    &::before, &::after {
+  position: absolute;
+  left: 15px;
+  content: ' ';
+  height: 33px;
+  width: 2px;
+  background-color: #333;
+}
+.close:before {
+  transform: rotate(45deg);
+}
+.close:after {
+  transform: rotate(-45deg);
+}
   }
   
   &-1 {
     &::before {
       width: 50%;
       height: 50%;
-      border: 2px solid #C44;
+      border: 2px solid #c61111;
     }
   }
   
@@ -61,7 +121,7 @@ $tile-size: 20px;
     &::before {
       width: 50%;
       height: 50%;
-      border: 2px solid #4C4;
+      border: 2px solid #8dc611;
       border-radius: 50%;
     }
   }
@@ -72,7 +132,15 @@ $tile-size: 20px;
       height: 0; 
       border-left: 5px solid transparent;
       border-right: 5px solid transparent;
-      border-bottom: 8px solid #44C;
+      border-bottom: 8px solid #4545f1;
+    }
+  }
+
+  &-4 {
+    &::before {
+      width: 6px; 
+      height: 12px; 
+      border: 2px solid #6dbae4;
     }
   }
 }

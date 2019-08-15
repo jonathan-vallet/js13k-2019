@@ -23,6 +23,7 @@ function startGame() {
     //playMusic();
     initGrid();
     initKeys();
+    $score.innerText = 0;
     createTile();
     loop();
 }
@@ -54,10 +55,16 @@ function initKeys() {
                 updateCurrentTileType();
                 break;
             case 40: // Bottom
-                downCurrentTile();
+                isMovingDown = true;
                 break;
         }
     };
+    document.onkeyup = function(e) {
+        switch (e.which) {
+            case 40: // Down
+                isMovingDown = false;
+        }
+    }
 }
 
 function initGrid() {
@@ -72,12 +79,11 @@ function initGrid() {
 }
 
 var adjacentTileList = [];
-function checkLineCompletion() {
+function checkLineCompletion(tile) {
     // Resets adjacent tile list
     adjacentTileList = [];
-    adjacentTileList.push(currentTile.x + '-' + currentTile.y);
-    checkTile(currentTile.x, currentTile.y, currentTile.type);
-    console.log('line checked!', adjacentTileList);
+    adjacentTileList.push(tile.x + '-' + tile.y);
+    getAdjacentTiles(tile.x, tile.y, tile.type);
 
     // Check is adjacent tile list is from start to end
     var isStartJoined = false;
@@ -86,10 +92,8 @@ function checkLineCompletion() {
         var x = Number(value.split('-')[0]);
         if(x === 0) {
             isStartJoined = true;
-            console.log('isStartJoined');
         } else if(x === GRID_WIDTH - 1) {
             isEndJoined = true;
-            console.log('isEndJoined');
         }
     });
 
@@ -97,26 +101,47 @@ function checkLineCompletion() {
     if(isEndJoined && isStartJoined) {
         // Removes all line tiles
         removeLine();
-        // Updates other tiles positions
-        for (var x = 0; x < GRID_WIDTH; ++x) {
-            for (var y = 0; y < GRID_HEIGHT; ++y) {    
-                // Checks if cell is not empty and not a blocking tile
-                if(grid[x][y] !== null && grid[x][y] !== 0) {
-                    console.log('tile found in', x, y, grid[x][y]);
-                    var tileY = y;
-                    while (tileY > 0 && grid[x][tileY - 1] === null) {
-                        var tile = document.querySelector(`.tile[data-x="${x}"][data-y="${tileY}"]`);
-                        console.log('move tile', tile, x, tileY - 1);
-                        setTilePosition({
-                            tile,
-                            x: x,
-                            y: tileY - 1
-                        });
-                        grid[x][tileY - 1] = grid[x][tileY];
-                        grid[x][tileY] = null;
-                        tile.setAttribute('data-y', tileY - 1);
-                        --tileY;
-                    }
+        updateTilesPosition();
+        updateScore(tile.type);
+
+        // Checks is another line is ended after having removed first one
+        // As a line must be completed, just checks first column tiles
+        for (var y = 0; y < GRID_HEIGHT; ++y) {
+            // Ignores empty and blocking tiles (cannot be completed as second tile)
+            if(grid[0][y] !== null && grid[0][y] !== 0) {
+                checkLineCompletion({
+                    x: 0,
+                    y,
+                    type: grid[0][y]
+                })
+            }
+        }
+    }
+}
+
+function updateScore(tileType) {
+    score += 50 * GRID_WIDTH * tileType; 
+    $score.innerText(score);
+}
+
+function updateTilesPosition() {
+    for (var x = 0; x < GRID_WIDTH; ++x) {
+        for (var y = 0; y < GRID_HEIGHT; ++y) {    
+            // Checks if cell is not empty and not a blocking tile
+            if(grid[x][y] !== null && grid[x][y] !== 0) {
+                var tileY = y;
+                // while tile under current one is empty, move the tile
+                while (tileY > 0 && grid[x][tileY - 1] === null) {
+                    var tile = document.querySelector(`.tile[data-x="${x}"][data-y="${tileY}"]`);
+                    setTilePosition({
+                        tile,
+                        x: x,
+                        y: tileY - 1
+                    });
+                    grid[x][tileY - 1] = grid[x][tileY];
+                    grid[x][tileY] = null;
+                    tile.setAttribute('data-y', tileY - 1);
+                    --tileY;
                 }
             }
         }
@@ -134,7 +159,7 @@ function removeLine() {
     }
 }
 
-function checkTile(tileX, tileY, type) {
+function getAdjacentTiles(tileX, tileY, type) {
     // Checks tiles around
     var minX = Math.max(tileX - 1, 0);
     var maxX = Math.min(tileX + 1, GRID_WIDTH - 1);
@@ -150,7 +175,7 @@ function checkTile(tileX, tileY, type) {
 
             if(grid[x][y] === type) {
                 adjacentTileList.push(x + '-' + y);
-                checkTile(x, y, type);
+                getAdjacentTiles(x, y, type);
             }
         }
     }
@@ -161,16 +186,14 @@ function gameOver() {
     isgameOver = true;
 }
 
-var last = 0;
-var requiredElapsed = 200; // desired interval is 10fps.
-
 /*
  * Game loop
  */
 function loop() {
     var now = Date.now();
-    if(!last || now - last >= requiredElapsed) {
-        last = now;
+    var speed = isMovingDown ? downAcceleratedSpeedDelay : downSpeedDelay;
+    if(!lastDownTime || now - lastDownTime >= speed) {
+        lastDownTime = now;
         downCurrentTile();
     }
 
