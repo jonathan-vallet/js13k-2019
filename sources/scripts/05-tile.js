@@ -4,20 +4,35 @@
 function createTile() {
     var x = Math.floor(GRID_WIDTH / 2);
     var y = GRID_HEIGHT - 1;
-    var max = TILE_NUMBER + 1;
-    var type = Math.floor(Math.random() * (max));
     var tile = document.createElement('p');
     tile.classList.add('tile');
-    tile.classList.add('tile-' + type);
+    tile.classList.add('tile-' + nextTileType);
     $grid.appendChild(tile);
     currentTile = {
         tile,
         x,
         y,
-        type,
+        type: nextTileType,
         hasChanged: false
     };
     setTilePosition(currentTile);
+    setNextTileType();
+}
+
+function setNextTileType() {
+    // Blocking tile
+    if(Math.random() <= 0.08) {
+        console.log('set blocker');
+        nextTileType = 0;
+    } else {
+        nextTileType = Math.ceil(Math.random() * TILE_NUMBER);
+    }
+
+    $nextTile.innerHTML = '';
+    var tile = document.createElement('p');
+    tile.classList.add('tile');
+    tile.classList.add('tile-' + nextTileType);
+    $nextTile.append(tile);
 }
 
 function setTilePosition(tile) {
@@ -55,12 +70,39 @@ function moveTile() {
         grid[currentTile.x][currentTile.y] = currentTile.type;
         currentTile.tile.setAttribute('data-x', currentTile.x);
         currentTile.tile.setAttribute('data-y', currentTile.y);
-        checkLineCompletion(currentTile);
+        
+        shakeScreen();
+        
+        var lineCompletePromise = new Promise(function(resolve, reject) {
+            checkLineCompletion(currentTile, resolve);
+        });
+        
+        lineCompletePromise.then(function(value) {
+            createTile();
+        });
+    }
+}
 
-        $grid.classList.remove('added-tile-speed');
-        $grid.classList.remove('added-tile');
-        void $grid.offsetWidth;
-        $grid.classList.add(isMovingDown ? 'added-tile-speed' : 'added-tile');
-        createTile();
+function shakeScreen() {
+    $grid.classList.remove('added-tile-speed');
+    $grid.classList.remove('added-tile');
+    void $grid.offsetWidth;
+    $grid.classList.add(isMovingDown ? 'added-tile-speed' : 'added-tile');
+}
+
+function showRemoveLineAnimation() {
+    var tileIndex = 0;
+    for (var x = 0; x < GRID_WIDTH; ++x) {
+        for (var y = 0; y < GRID_HEIGHT; ++y) {    
+            if(adjacentTileList.indexOf(x + '-' + y) >= 0) {$
+                var $tile = document.querySelector(`.tile[data-x="${x}"][data-y="${y}"]`);
+                $tile.style.transitionDelay = `${++tileIndex / (adjacentTileList.length + 1)}s`;
+                $tile.classList.add('removed');
+                var $rotate = (Math.round(Math.random()) * 2 - 1) * (Math.random() * 10 + 7);
+                $tile.style.transformOrigin = `${-($rotate * 10 + 50)}px center`;
+                $tile.style.transform = `rotate(${$rotate}deg)`;
+                console.log(`${$rotate * 10 + 50}px center`, `rotate(${$rotate}deg)`);
+            }
+        }
     }
 }

@@ -24,6 +24,8 @@ function startGame() {
     initGrid();
     initKeys();
     $score.innerText = 0;
+    updateAvailableTileList();
+    setNextTileType();
     createTile();
     loop();
 }
@@ -57,7 +59,11 @@ function initKeys() {
             case 40: // Bottom
                 isMovingDown = true;
                 break;
-        }
+
+            case 32: // Bottom
+                isGamePaused = !isGamePaused;
+                break;
+            }
     };
     document.onkeyup = function(e) {
         switch (e.which) {
@@ -70,6 +76,7 @@ function initKeys() {
 function initGrid() {
     $grid.style.width = (GRID_WIDTH * TILE_SIZE) + 'px';
     $grid.style.height = (GRID_HEIGHT * TILE_SIZE) + 'px';
+    $tileList.style.height = (GRID_HEIGHT * TILE_SIZE) + 'px';
     for (var x = 0; x < GRID_WIDTH; ++x) {
         grid[x]=[];
         for (var y = 0; y < GRID_HEIGHT; ++y) {    
@@ -78,8 +85,7 @@ function initGrid() {
     }
 }
 
-var adjacentTileList = [];
-function checkLineCompletion(tile) {
+function checkLineCompletion(tile, resolve) {
     // Resets adjacent tile list
     adjacentTileList = [];
     adjacentTileList.push(tile.x + '-' + tile.y);
@@ -100,28 +106,54 @@ function checkLineCompletion(tile) {
     // Line is completed
     if(isEndJoined && isStartJoined) {
         // Removes all line tiles
-        removeLine();
-        updateTilesPosition();
-        updateScore(tile.type);
+        isGamePerformingAnimation = true;
+        showRemoveLineAnimation();
 
-        // Checks is another line is ended after having removed first one
-        // As a line must be completed, just checks first column tiles
-        for (var y = 0; y < GRID_HEIGHT; ++y) {
-            // Ignores empty and blocking tiles (cannot be completed as second tile)
-            if(grid[0][y] !== null && grid[0][y] !== 0) {
-                checkLineCompletion({
-                    x: 0,
-                    y,
-                    type: grid[0][y]
-                })
+        setTimeout(() => {
+            removeLine();
+            updateTilesPosition();
+            updateScore(tile.type);
+    
+            // Checks is another line is ended after having removed first one
+            // As a line must be completed, just checks first column tiles
+            for (var y = 0; y < GRID_HEIGHT; ++y) {
+                // Ignores empty and blocking tiles (cannot be completed as second tile)
+                if(grid[0][y] !== null && grid[0][y] !== 0) {
+                    checkLineCompletion({
+                        x: 0,
+                        y,
+                        type: grid[0][y]
+                    })
+                }
             }
+            isGamePerformingAnimation = false;
+        }, 1000);
+    } else {
+        if(resolve) {
+            resolve();
         }
     }
 }
 
 function updateScore(tileType) {
-    score += 50 * GRID_WIDTH * tileType; 
-    $score.innerText(score);
+    var tileBaseScore = Math.max(1, tileType); // For blockers, uses square scoer instead of 0
+    score += 5 * adjacentTileList.length * GRID_WIDTH * tileBaseScore; 
+    $score.innerText = score;
+    var newTileNumber = Math.min(MAX_TILE_NUMBER, Math.floor(score / 750) + 2);
+    if(newTileNumber > TILE_NUMBER) {
+        TILE_NUMBER = newTileNumber;
+        updateAvailableTileList();
+    } 
+}
+
+function updateAvailableTileList() {
+    $tileList.innerHTML = '';
+    for(var index = 0; index <= TILE_NUMBER; ++index) {
+        var tile = document.createElement('p');
+        tile.classList.add('tile');
+        tile.classList.add('tile-' + index);
+        $tileList.append(tile);
+    }
 }
 
 function updateTilesPosition() {
@@ -190,11 +222,13 @@ function gameOver() {
  * Game loop
  */
 function loop() {
-    var now = Date.now();
-    var speed = isMovingDown ? downAcceleratedSpeedDelay : downSpeedDelay;
-    if(!lastDownTime || now - lastDownTime >= speed) {
-        lastDownTime = now;
-        downCurrentTile();
+    if(!isGamePaused && !isGamePerformingAnimation) {
+        var now = Date.now();
+        var speed = isMovingDown ? downAcceleratedSpeedDelay : downSpeedDelay;
+        if(!lastDownTime || now - lastDownTime >= speed) {
+            lastDownTime = now;
+            downCurrentTile();
+        }
     }
 
     if(!isgameOver) {
