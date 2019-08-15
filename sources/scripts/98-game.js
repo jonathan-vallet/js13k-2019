@@ -1,5 +1,3 @@
-import { removeListener } from "cluster";
-
 // Plays you music
 /*
 var audio = document.createElement("audio");
@@ -32,30 +30,43 @@ function startGame() {
 function initKeys() {
     document.onkeydown = function(e) {
         switch (e.which) {
-            case 37:
-                if(currentTile.x <= 0 || grid[currentTile.y][currentTile.x - 1] !== null) {
+            case 37: // Left
+                if(currentTile.x <= 0 || grid[currentTile.x - 1][currentTile.y] !== null) {
                     return;
                 }
                 currentTile.x -=1;
                 moveTile();
                 break;
-            case 39:
-                if(currentTile.x > GRID_WIDTH || grid[currentTile.y][currentTile.x + 1] !== null) {
+            case 39: // Right
+                console.log(GRID_WIDTH, currentTile.x)
+                if(currentTile.x + 1 >= GRID_WIDTH || grid[currentTile.x + 1][currentTile.y] !== null) {
                     return;
                 }
                 currentTile.x +=1;
                 moveTile();
+                break;
+            case 38: // Top
+                // Tile can change once and not from starter form
+                console.log(currentTile);
+                if(currentTile.hasChanged || currentTile.type <= 1) {
+                    return; 
+                }
+                updateCurrentTileType();
+                break;
+            case 40: // Bottom
+                downCurrentTile();
                 break;
         }
     };
 }
 
 function initGrid() {
-    for (var y = 0; y < GRID_HEIGHT; ++y) {    
-        grid[y]=[];
-
-        for (var x = 0; x < GRID_WIDTH; ++x) {
-            grid[y][x] = null;
+    $grid.style.width = (GRID_WIDTH * TILE_SIZE) + 'px';
+    $grid.style.height = (GRID_HEIGHT * TILE_SIZE) + 'px';
+    for (var x = 0; x < GRID_WIDTH; ++x) {
+        grid[x]=[];
+        for (var y = 0; y < GRID_HEIGHT; ++y) {    
+            grid[x][y] = null;
         }
     }
 }
@@ -82,17 +93,41 @@ function checkLineCompletion() {
         }
     });
 
+    // Line is completed
     if(isEndJoined && isStartJoined) {
-        console.log('line complete!!');
+        // Removes all line tiles
         removeLine();
+        // Updates other tiles positions
+        for (var x = 0; x < GRID_WIDTH; ++x) {
+            for (var y = 0; y < GRID_HEIGHT; ++y) {    
+                // Checks if cell is not empty and not a blocking tile
+                if(grid[x][y] !== null && grid[x][y] !== 0) {
+                    console.log('tile found in', x, y, grid[x][y]);
+                    var tileY = y;
+                    while (tileY > 0 && grid[x][tileY - 1] === null) {
+                        var tile = document.querySelector(`.tile[data-x="${x}"][data-y="${tileY}"]`);
+                        console.log('move tile', tile, x, tileY - 1);
+                        setTilePosition({
+                            tile,
+                            x: x,
+                            y: tileY - 1
+                        });
+                        grid[x][tileY - 1] = grid[x][tileY];
+                        grid[x][tileY] = null;
+                        tile.setAttribute('data-y', tileY - 1);
+                        --tileY;
+                    }
+                }
+            }
+        }
     }
 }
 
 function removeLine() {
-    for (var y = 0; y < GRID_HEIGHT; ++y) {    
-        for (var x = 0; x < GRID_WIDTH; ++x) {
+    for (var x = 0; x < GRID_WIDTH; ++x) {
+        for (var y = 0; y < GRID_HEIGHT; ++y) {    
             if(adjacentTileList.indexOf(x + '-' + y) >= 0) {
-                grid[y][x] = null;
+                grid[x][y] = null;
                 document.querySelector(`.tile[data-x="${x}"][data-y="${y}"]`).remove();
             }
         }
@@ -102,9 +137,10 @@ function removeLine() {
 function checkTile(tileX, tileY, type) {
     // Checks tiles around
     var minX = Math.max(tileX - 1, 0);
-    var maxX = Math.min(tileX + 1, GRID_WIDTH);
+    var maxX = Math.min(tileX + 1, GRID_WIDTH - 1);
     var minY = Math.max(tileY - 1, 0);
     var maxY = Math.min(tileY + 1, GRID_HEIGHT - 1);
+
     for(var x = minX; x <= maxX; ++x) {
         for(var y = minY; y <= maxY; ++y) {
             // Ignores current tile and already checked matching tiles
@@ -112,7 +148,7 @@ function checkTile(tileX, tileY, type) {
                 continue;
             }
 
-            if(grid[y][x] === type) {
+            if(grid[x][y] === type) {
                 adjacentTileList.push(x + '-' + y);
                 checkTile(x, y, type);
             }
