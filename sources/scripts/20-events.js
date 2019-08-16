@@ -1,5 +1,13 @@
 function initKeys() {
     $play.addEventListener('click', () => {
+        startGame();
+        unpauseGame();
+    });
+    
+    $tutorialLink.addEventListener('click', () => {
+        setTutorialGrid();
+        startGame();
+        unpauseGame();
     });
 
     document.onkeydown = function(e) {

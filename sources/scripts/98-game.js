@@ -35,6 +35,7 @@ function startGame() {
     updateAvailableTileList();
     setNextTileType();
     createTile();
+    setNextTileType();
     loop();
 }
 
@@ -54,13 +55,24 @@ function unpauseGame() {
 function initGrid() {
     $grid.style.width = (GRID_WIDTH * TILE_SIZE) + 'px';
     $grid.style.height = (GRID_HEIGHT * TILE_SIZE) + 'px';
-    $tileList.style.height = (GRID_HEIGHT * TILE_SIZE) + 'px';
     for (var x = 0; x < GRID_WIDTH; ++x) {
         grid[x]=[];
         for (var y = 0; y < GRID_HEIGHT; ++y) {    
             grid[x][y] = null;
         }
     }
+}
+
+function setTutorialGrid() {
+    Object.entries(TUTORIAL_GRID).forEach(([key, value]) => {
+        var coordinates = key.split('-');
+        grid[coordinates[0]][coordinates[1]] = value;
+        var tile = createTile(coordinates[0], coordinates[1], value);
+        setTileOnGrid(tile);
+    });
+
+    // Force next tile
+    setNextTileType(2);
 }
 
 var lineCompletionPromise = new Promise(function(resolve, reject) {
@@ -89,11 +101,11 @@ async function checkComboLineCompletion(tile) {
     }
 }
 
-async function checkLineCompletion(tile) {
+function isLineCompleted(checkedTile) {
     // Resets adjacent tile list
     adjacentTileList = [];
-    adjacentTileList.push(tile.x + '-' + tile.y);
-    getAdjacentTiles(tile.x, tile.y, tile.type);
+    adjacentTileList.push(checkedTile.x + '-' + checkedTile.y);
+    getAdjacentTiles(checkedTile.x, checkedTile.y, checkedTile.type);
 
     // Check is adjacent tile list is from start to end
     var isStartJoined = false;
@@ -107,8 +119,12 @@ async function checkLineCompletion(tile) {
         }
     });
 
+    return isStartJoined && isEndJoined;
+}
+
+async function checkLineCompletion(tile) {
     // Line is completed
-    if(isEndJoined && isStartJoined) {
+    if(isLineCompleted(tile)) {
         // Removes all line tiles
         showRemoveLineAnimation();
         await wait(1000);
@@ -125,13 +141,16 @@ async function checkLineCompletion(tile) {
 
 function updateScore(tileType) {
     var tileBaseScore = Math.max(1, tileType); // For blockers, uses square scoer instead of 0
-    score += 5 * adjacentTileList.length * GRID_WIDTH * tileBaseScore; 
+    score += 5 * adjacentTileList.length * GRID_WIDTH * tileBaseScore;
+    $score.classList.add('updated');
+    $score.offsetWidth;
     $score.innerText = score;
     var newTileNumber = Math.min(MAX_TILE_NUMBER, Math.floor(score / 750) + 2);
     if(newTileNumber > TILE_NUMBER) {
         TILE_NUMBER = newTileNumber;
         updateAvailableTileList();
-    } 
+    }
+//    $score.classList.remove('updated');
 }
 
 function updateAvailableTileList() {
@@ -144,6 +163,9 @@ function updateAvailableTileList() {
     }
 }
 
+/**
+ * Updates all tiles position after a complete line removed
+ */
 function updateTilesPosition() {
     for (var x = 0; x < GRID_WIDTH; ++x) {
         for (var y = 0; y < GRID_HEIGHT; ++y) {    

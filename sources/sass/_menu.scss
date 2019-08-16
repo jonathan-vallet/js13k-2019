@@ -2,6 +2,7 @@
   position: absolute;
   display: flex;
   align-items: center;
+  flex-direction: column;
   justify-content: center;
   top: 0;
   left: 0;
@@ -11,21 +12,28 @@
   background: rgba(0, 0, 0, 0.7);
 }
 
-#menu-play {
+
+#menu-play,
+#menu-tutorial {
   display: block;
   position: relative;
-  padding: 15px 25px;
-  border: 2px solid #e55743;
-  background: transparent;
+  margin-top: 15px;
+  padding: 10px 20px;
   color: #e55743;
   text-transform: uppercase;
   letter-spacing: .25em;
   cursor: pointer;
-  font-weight: bold;
-  box-shadow: inset 0 0 0 2px currentcolor;
+  font: bold 13px serif;
   transition: background .8s ease;
   
   &:hover {
-    background: rgba(100, 0, 0, .03);
+    background: rgba(117, 5, 5, 0.3);
   }
+}
+
+#menu-play {
+  padding: 15px 25px;
+  border: 4px solid #e55743;
+  color: #e55743;
+  font-size: 16px;
 }

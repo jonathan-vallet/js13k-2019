@@ -1,30 +1,34 @@
 /**
  * Create a new tile on grid
  */
-function createTile() {
-    var x = Math.floor(GRID_WIDTH / 2);
-    var y = GRID_HEIGHT - 1;
+function createTile(x, y, type) {
+    x = typeof x !== 'undefined' ? x : Math.floor(GRID_WIDTH / 2);
+    y = typeof y !== 'undefined' ? y : GRID_HEIGHT - 1;
+    type = typeof type !== 'undefined' ? type : nextTileType;
+    
     var tile = document.createElement('p');
     tile.classList.add('tile');
-    tile.classList.add('tile-' + nextTileType);
+    tile.classList.add('tile-' + type);
     $grid.appendChild(tile);
     currentTile = {
         tile,
         x,
         y,
-        type: nextTileType,
+        type,
         hasChanged: false
     };
     setTilePosition(currentTile);
-    setNextTileType();
+    return currentTile;
 }
 
 /**
  * Defines the type of the next tile for preview
  */
-function setNextTileType() {
+function setNextTileType(forcedType) {
     // Blocking tile
-    if(Math.random() <= 0.08) {
+    if(typeof forcedType !== 'undefined') {
+        nextTileType = forcedType;
+    } else if(Math.random() <= 0.08) {
         nextTileType = 0;
     } else {
         nextTileType = Math.ceil(Math.random() * TILE_NUMBER);
@@ -66,20 +70,23 @@ function moveTile() {
             gameOver();
         }
 
-        grid[currentTile.x][currentTile.y] = currentTile.type;
-        currentTile.tile.setAttribute('data-x', currentTile.x);
-        currentTile.tile.setAttribute('data-y', currentTile.y);
-        
-        console.log('tile on floor', currentTile, currentTile.type);
+        setTileOnGrid(currentTile)
         shakeScreen();
-        
         isGamePerformingAnimation = true;
-        checkComboLineCompletion(currentTile).then(() => {
-            console.log('checkLineCompletion resolve!');
-            createTile();
-            isGamePerformingAnimation = false;
+        flickerTile(currentTile).then(() => {
+            checkComboLineCompletion(currentTile).then(() => {
+                createTile();
+                setNextTileType();
+                isGamePerformingAnimation = false;
+            });
         });
     }
+}
+
+function setTileOnGrid(tile) {
+    grid[tile.x][tile.y] = tile.type;
+    tile.tile.setAttribute('data-x', tile.x);
+    tile.tile.setAttribute('data-y', tile.y);
 }
 
 /**
@@ -90,6 +97,11 @@ function shakeScreen() {
     $grid.classList.remove('added-tile');
     void $grid.offsetWidth; // Triggers a reflow
     $grid.classList.add(isMovingDown ? 'added-tile-speed' : 'added-tile');
+}
+
+async function flickerTile(tile) {
+    tile.tile.classList.add(isLineCompleted(tile) ? 'added-tile-success': 'added-tile');
+    await wait(500);
 }
 
 /**

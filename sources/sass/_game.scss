@@ -28,7 +28,10 @@ $tile-size: 40px;
 #game {
   display: flex;
   align-content: center;
+  justify-content: space-around;
   height: 100%;
+  width: 50%;
+  margin: 0 auto;
   overflow: hidden;
 }
 
@@ -49,9 +52,22 @@ $tile-size: 40px;
   }
 }
 
+#left {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: $tile-size * 1.5;
+}
+
+#right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: $tile-size * 1.5;
+}
+
 #tile-list {
   width: 1.5 * $tile-size;
-  height: 25 * $tile-size;
   display: flex;
   flex-direction: column-reverse;
 
@@ -60,15 +76,6 @@ $tile-size: 40px;
     margin: $tile-size / 4;
     animation: expand .5s cubic-bezier(0.45, 0, 0.45, 1.5);
   }
-}
-
-#score {
-  display: block;
-  position: absolute;
-  top: 0;
-  right: 0;
-  color: #333;
-  font-size: 14px;
 }
 
 .tile {
@@ -100,9 +107,11 @@ $tile-size: 40px;
       width: 10%;
       background-color: #333;
     }
+
     &::before {
       transform: translate(-50%, -50%) rotate(45deg);
     }
+
     &::after {
       transform: translate(-50%, -50%) rotate(-45deg);
     }
@@ -149,5 +158,13 @@ $tile-size: 40px;
 
   &.removed {
     opacity: 0;
+  }
+
+  &.added-tile {
+    animation: flicker 0.5s ease;
+  }
+
+  &.added-tile-success {
+    animation: flicker 0.25s ease 2;
   }
 }
