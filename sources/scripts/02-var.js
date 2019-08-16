@@ -4,21 +4,23 @@ var $ = function( id ) { return document.getElementById( id ); };
 var TILE_SIZE = 40;
 var MAX_TILE_NUMBER = 4;
 var TILE_NUMBER = 2;
+var GRID_HEIGHT = 20;
+var GRID_WIDTH = 10;
 
 // Elements
+var $game = $('game');
 var $grid = $('grid');
 var $score = $('score');
 var $tileList = $('tile-list');
 var $nextTile = $('next-tile');
 var $play = $('menu-play');
 
+var isGameStarted = false;
 var grid = {
 }; // The grid content with list of tiles
 var adjacentTileList = []; // Used when checking line completion, list of adjacent tiles
 var currentTile; // The current tile played
 var nextTileType; // Preview of next tile type
-var GRID_HEIGHT = 20;
-var GRID_WIDTH = 11;
 
 var isgameOver = false; // Checks if game is over
 var isMovingDown = false;

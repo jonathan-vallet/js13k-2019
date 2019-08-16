@@ -9,4 +9,12 @@
     .tile {
       margin: 0.25 * $tile-size;
     }
+
+    &:empty {
+      transform: scale(0);
+    }
+
+    &:not(:empty) {
+      animation: expand .5s cubic-bezier(0.45, 0, 0.45, 1.5);
+    }
   }

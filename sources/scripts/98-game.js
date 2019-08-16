@@ -18,10 +18,19 @@ function stopMusic() {
     audio.pause();
 }
 */
-function startGame() {
+
+// wait function to be able to wait for animation end before continuing game
+const wait = ms => new Promise((resolve) => setTimeout(resolve, ms));
+
+function initGame() {
     //playMusic();
+    checkSize();
     initGrid();
     initKeys();
+}
+
+function startGame() {
+    isGameStarted = true;
     $score.innerText = 0;
     updateAvailableTileList();
     setNextTileType();
@@ -37,60 +46,8 @@ function pauseGame() {
 function unpauseGame() {
     isGamePaused = false;
     document.body.classList.remove('paused');
-}
-
-function initKeys() {
-    $play.addEventListener('click', () => {
-    });
-
-    document.onkeydown = function(e) {
-        switch (e.which) {
-            case 37: // Left
-                if(currentTile.x <= 0 || grid[currentTile.x - 1][currentTile.y] !== null) {
-                    return;
-                }
-                isMovingLeft = true;
-                break;
-            case 39: // Right
-                if(currentTile.x + 1 >= GRID_WIDTH || grid[currentTile.x + 1][currentTile.y] !== null) {
-                    return;
-                }
-                isMovingRight = true;
-                break;
-            case 38: // Top
-                // Tile can change once and not from starter form
-                if(currentTile.hasChanged || currentTile.type <= 1) {
-                    return; 
-                }
-                updateCurrentTileType();
-                break;
-            case 40: // Bottom
-                isMovingDown = true;
-                break;
-
-            case 32: // Bottom
-                if(isGamePaused) {
-                    unpauseGame();
-                } else {
-                    pauseGame();
-                }
-                break;
-            }
-    };
-    document.onkeyup = function(e) {
-        switch (e.which) {
-            case 37: // Left
-                isMovingLeft = false;
-                lastMoveTime = 0;
-                break;
-            case 39: // Right
-                isMovingRight = false;
-                lastMoveTime = 0;
-                break;
-            case 40: // Down
-                isMovingDown = false;
-                break;
-        }
+    if(!isGameStarted) {
+        startGame();
     }
 }
 
@@ -106,7 +63,33 @@ function initGrid() {
     }
 }
 
-function checkLineCompletion(tile, resolve) {
+var lineCompletionPromise = new Promise(function(resolve, reject) {
+    setTimeout(function() {
+      resolve('foo');
+    }, 3000);
+  });
+
+async function checkComboLineCompletion(tile) {
+    const isLineCompleted = await checkLineCompletion(tile);
+    if(isLineCompleted) {
+        // Checks is another line is ended after having removed first one
+        // As a line must be completed, just checks first column tiles
+        for (var y = 0; y < GRID_HEIGHT; ++y) {
+            // Ignores empty and blocking tiles (cannot be completed as second tile)
+            if(grid[0][y] !== null && grid[0][y] !== 0) {
+                await checkLineCompletion({
+                    x: 0,
+                    y,
+                    type: grid[0][y]
+                })
+            }
+        }
+    } else {
+        console.log('no line completed');
+    }
+}
+
+async function checkLineCompletion(tile) {
     // Resets adjacent tile list
     adjacentTileList = [];
     adjacentTileList.push(tile.x + '-' + tile.y);
@@ -127,33 +110,17 @@ function checkLineCompletion(tile, resolve) {
     // Line is completed
     if(isEndJoined && isStartJoined) {
         // Removes all line tiles
-        isGamePerformingAnimation = true;
         showRemoveLineAnimation();
-
-        setTimeout(() => {
-            removeLine();
-            updateTilesPosition();
-            updateScore(tile.type);
+        await wait(1000);
     
-            // Checks is another line is ended after having removed first one
-            // As a line must be completed, just checks first column tiles
-            for (var y = 0; y < GRID_HEIGHT; ++y) {
-                // Ignores empty and blocking tiles (cannot be completed as second tile)
-                if(grid[0][y] !== null && grid[0][y] !== 0) {
-                    checkLineCompletion({
-                        x: 0,
-                        y,
-                        type: grid[0][y]
-                    })
-                }
-            }
-            isGamePerformingAnimation = false;
-        }, 1000);
-    } else {
-        if(resolve) {
-            resolve();
-        }
+        removeLine(); // Removes line from grid after animation end
+        updateTilesPosition();
+        updateScore(tile.type);
+        await wait(300);
+        return true;
     }
+
+    return false;
 }
 
 function updateScore(tileType) {
@@ -202,9 +169,11 @@ function updateTilesPosition() {
 }
 
 function removeLine() {
+    console.log('remove line', adjacentTileList);
     for (var x = 0; x < GRID_WIDTH; ++x) {
         for (var y = 0; y < GRID_HEIGHT; ++y) {    
             if(adjacentTileList.indexOf(x + '-' + y) >= 0) {
+                console.log('remove line tile', x, y);
                 grid[x][y] = null;
                 document.querySelector(`.tile[data-x="${x}"][data-y="${y}"]`).remove();
             }
@@ -243,6 +212,8 @@ function gameOver() {
  * Game loop
  */
 function loop() {
+    var updatePosition = false;
+    console.log('loop', isGamePerformingAnimation);
     if(!isGamePaused && !isGamePerformingAnimation) {
         var now = Date.now();
         var speed = isMovingDown ? downAcceleratedSpeedDelay : downSpeedDelay;
@@ -252,19 +223,24 @@ function loop() {
                 if(currentTile.x <= 0 || grid[currentTile.x - 1][currentTile.y] !== null) {
                 } else {
                     currentTile.x -=1;
-                    moveTile();
+                    updatePosition = true;
                 }
             } else if(isMovingRight) {
                 if(currentTile.x + 1 >= GRID_WIDTH || grid[currentTile.x + 1][currentTile.y] !== null) {
                 } else {
                     currentTile.x +=1;
-                    moveTile();
+                    updatePosition = true;
                 }
             }
         }
         if(!lastDownTime || now - lastDownTime >= speed) {
             lastDownTime = now;
-            downCurrentTile();
+            currentTile.y -= 1;
+            updatePosition = true;
+        }
+
+        if(updatePosition) {
+            moveTile();
         }
     }
 
@@ -274,4 +250,4 @@ function loop() {
 }
 
 // Let's the game start!
-startGame();
+initGame();
