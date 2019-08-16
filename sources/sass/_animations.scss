@@ -1,0 +1,31 @@
+@keyframes expand {
+    from {
+      transform: scale(0);
+      opacity: 0;
+    }
+  }
+  
+  @keyframes addedTileSpeed {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(3px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes addedTile {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(1px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  

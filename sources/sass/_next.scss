@@ -1,0 +1,12 @@
+#next-tile {
+    position: absolute;
+    top: 50px;
+    left: calc(50% + #{6 * $tile-size});
+    width: 1.5 * $tile-size;
+    height: 1.5 * $tile-size;
+    background: $grid-color;
+  
+    .tile {
+      margin: 0.25 * $tile-size;
+    }
+  }

@@ -15,6 +15,12 @@ html {
 body {
   height: 100%;
   background: $background-color;
+
+  &:not(.paused) {
+    #menu {
+      display: none;
+    }
+  }
 }
 
 $tile-size: 40px;
@@ -31,6 +37,7 @@ $tile-size: 40px;
   width: 15 * $tile-size;
   height: 25 * $tile-size;
   margin: auto;
+  overflow: hidden;
   background: $grid-color;
 
   &.added-tile {
@@ -51,39 +58,7 @@ $tile-size: 40px;
   .tile {
     position: relative;
     margin: $tile-size / 4;
-  }
-}
-
-#next-tile {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 1.5 * $tile-size;
-  height: 1.5 * $tile-size;
-  background: red;
-}
-
-@keyframes addedTileSpeed {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(3px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes addedTile {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(1px);
-  }
-  100% {
-    transform: translateY(0);
+    animation: expand .5s cubic-bezier(0.45, 0, 0.45, 1.5);
   }
 }
 

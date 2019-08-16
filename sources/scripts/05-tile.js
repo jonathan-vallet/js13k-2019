@@ -58,7 +58,7 @@ function downCurrentTile() {
 /**
  * Moves current tile
  */
-function moveTile() {
+function moveTile() {isMovingLeft
     setTilePosition(currentTile);
     // Checks collision
     if(currentTile.y <= 0 || grid[currentTile.x][currentTile.y - 1] !== null) {

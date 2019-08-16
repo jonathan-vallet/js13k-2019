@@ -19,7 +19,6 @@ function stopMusic() {
 }
 */
 function startGame() {
-    console.log('game starting!');
     //playMusic();
     initGrid();
     initKeys();
@@ -30,27 +29,36 @@ function startGame() {
     loop();
 }
 
+function pauseGame() {
+    isGamePaused = true;
+    document.body.classList.add('paused');
+}
+
+function unpauseGame() {
+    isGamePaused = false;
+    document.body.classList.remove('paused');
+}
+
 function initKeys() {
+    $play.addEventListener('click', () => {
+    });
+
     document.onkeydown = function(e) {
         switch (e.which) {
             case 37: // Left
                 if(currentTile.x <= 0 || grid[currentTile.x - 1][currentTile.y] !== null) {
                     return;
                 }
-                currentTile.x -=1;
-                moveTile();
+                isMovingLeft = true;
                 break;
             case 39: // Right
-                console.log(GRID_WIDTH, currentTile.x)
                 if(currentTile.x + 1 >= GRID_WIDTH || grid[currentTile.x + 1][currentTile.y] !== null) {
                     return;
                 }
-                currentTile.x +=1;
-                moveTile();
+                isMovingRight = true;
                 break;
             case 38: // Top
                 // Tile can change once and not from starter form
-                console.log(currentTile);
                 if(currentTile.hasChanged || currentTile.type <= 1) {
                     return; 
                 }
@@ -61,14 +69,27 @@ function initKeys() {
                 break;
 
             case 32: // Bottom
-                isGamePaused = !isGamePaused;
+                if(isGamePaused) {
+                    unpauseGame();
+                } else {
+                    pauseGame();
+                }
                 break;
             }
     };
     document.onkeyup = function(e) {
         switch (e.which) {
+            case 37: // Left
+                isMovingLeft = false;
+                lastMoveTime = 0;
+                break;
+            case 39: // Right
+                isMovingRight = false;
+                lastMoveTime = 0;
+                break;
             case 40: // Down
                 isMovingDown = false;
+                break;
         }
     }
 }
@@ -225,6 +246,22 @@ function loop() {
     if(!isGamePaused && !isGamePerformingAnimation) {
         var now = Date.now();
         var speed = isMovingDown ? downAcceleratedSpeedDelay : downSpeedDelay;
+        if(!lastMoveTime || now - lastMoveTime >= moveSpeedDelay) {
+            lastMoveTime = now;
+            if(isMovingLeft) {
+                if(currentTile.x <= 0 || grid[currentTile.x - 1][currentTile.y] !== null) {
+                } else {
+                    currentTile.x -=1;
+                    moveTile();
+                }
+            } else if(isMovingRight) {
+                if(currentTile.x + 1 >= GRID_WIDTH || grid[currentTile.x + 1][currentTile.y] !== null) {
+                } else {
+                    currentTile.x +=1;
+                    moveTile();
+                }
+            }
+        }
         if(!lastDownTime || now - lastDownTime >= speed) {
             lastDownTime = now;
             downCurrentTile();

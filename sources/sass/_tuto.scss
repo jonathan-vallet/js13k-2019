@@ -1,0 +1,16 @@
+#tuto-highlight {
+    display: none;
+    position: absolute;
+    top: $tile-size * 5.5;
+    left: $tile-size * 5.5;
+    width: $tile-size * 40;
+    height: $tile-size * 40;
+    z-index: 4;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.7);
+    /* border-radius: 50%; */
+    /* -webkit-box-shadow: 0 0 50px 0 black; */
+    /* border: 800px solid rgba(0, 0, 0, 0.5); */
+    box-sizing: content-box;
+    -webkit-mask-image: radial-gradient(50px at 50% 50% , transparent 95%, black 100%);
+  }
