@@ -3,7 +3,7 @@ var $ = function( id ) { return document.getElementById( id ); };
 
 const TILE_SIZE = 40;
 const MAX_TILE_NUMBER = 9;
-var TILE_NUMBER = 9;
+var TILE_NUMBER = 2;
 var GRID_HEIGHT = 20;
 var GRID_WIDTH = 10;
 
@@ -62,8 +62,8 @@ var isMovingRight = false;
 
 var lastDownTime = 0;
 var lastMoveTime = 0;
-var downSpeedDelay = 200; // timer before tile going down
-var moveSpeedDelay = 80;
+var downSpeedDelay = 800; // timer before tile going down
+var moveSpeedDelay = 100;
 var downAcceleratedSpeedDelay = 75; // timer before tile going down when speed is increased
 var score = 0;
 

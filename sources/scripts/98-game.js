@@ -182,11 +182,9 @@ function updateTilesPosition() {
 }
 
 function removeLine() {
-    console.log('remove line', adjacentTileList);
     for (var x = 0; x < GRID_WIDTH; ++x) {
         for (var y = 0; y < GRID_HEIGHT; ++y) {    
             if(adjacentTileList.indexOf(x + '-' + y) >= 0) {
-                console.log('remove line tile', x, y);
                 grid[x][y] = null;
                 document.querySelector(`.tile[data-x="${x}"][data-y="${y}"]`).remove();
             }
@@ -226,7 +224,6 @@ function gameOver() {
  */
 function loop() {
     var updatePosition = false;
-    console.log('loop', isGamePerformingAnimation);
     if(!isGamePaused && !isGamePerformingAnimation) {
         var now = Date.now();
         var speed = isMovingDown ? downAcceleratedSpeedDelay : downSpeedDelay;

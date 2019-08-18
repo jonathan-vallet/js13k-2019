@@ -89,7 +89,7 @@ function moveTile() {
             gameOver();
         }
 
-        setTileOnGrid(currentTile)
+        setTileOnGrid(currentTile);
         shakeScreen();
         isGamePerformingAnimation = true;
         flickerTile(currentTile).then(() => {
@@ -103,6 +103,10 @@ function moveTile() {
     }
 }
 
+/**
+ * Adds the tile on the grid before create a new one
+ * @param {Object} tile  
+ */
 function setTileOnGrid(tile) {
     grid[tile.x][tile.y] = tile.type;
     tile.tile.setAttribute('data-x', tile.x);

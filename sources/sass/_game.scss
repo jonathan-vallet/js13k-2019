@@ -27,8 +27,8 @@ body {
     display: flex;
     align-content: center;
     justify-content: space-around;
-    height: 100%;
-    width: 70%;
+    height: 800px;
+    width: 800px;
     margin: 0 auto;
     overflow: hidden;
 }
@@ -43,10 +43,12 @@ body {
 
     &.added-tile {
         animation: addedTile 0.2s;
+        animation-delay: 0.4s;
     }
 
     &.added-tile-speed {
         animation: addedTileSpeed 0.2s;
+        animation-delay: 0.4s;
     }
 }
 
