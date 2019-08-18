@@ -2,8 +2,8 @@
 var $ = function( id ) { return document.getElementById( id ); };
 
 const TILE_SIZE = 40;
-const MAX_TILE_NUMBER = 4;
-var TILE_NUMBER = 2;
+const MAX_TILE_NUMBER = 9;
+var TILE_NUMBER = 9;
 var GRID_HEIGHT = 20;
 var GRID_WIDTH = 10;
 

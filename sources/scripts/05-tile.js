@@ -6,9 +6,8 @@ function createTile(x, y, type) {
     y = typeof y !== 'undefined' ? y : GRID_HEIGHT - 1;
     type = typeof type !== 'undefined' ? type : nextTileType;
     
-    var tile = document.createElement('p');
-    tile.classList.add('tile');
-    tile.classList.add('tile-' + type);
+    var tile = createTileElement(type);
+
     $grid.appendChild(tile);
     currentTile = {
         tile,
@@ -17,8 +16,29 @@ function createTile(x, y, type) {
         type,
         hasChanged: false
     };
+
     setTilePosition(currentTile);
     return currentTile;
+}
+
+function highlightTile() {
+    var hightlightedTile = $tileList.querySelector(`.tile.highlight`);
+    if(hightlightedTile) {
+        hightlightedTile.classList.remove('highlight', 'changed');
+    }
+    $tileList.querySelector(`.tile-${currentTile.type}`).classList.add('highlight');
+}
+
+function createTileElement(type) {
+    var $tile = document.createElement('p');
+    $tile.classList.add('tile');
+    $tile.classList.add('tile-' + type);
+
+    var $tileShape = document.createElement('span');
+    $tileShape.classList.add('tile-shape');
+    $tile.appendChild($tileShape);
+
+    return $tile;
 }
 
 /**
@@ -35,9 +55,7 @@ function setNextTileType(forcedType) {
     }
 
     $nextTile.innerHTML = '';
-    var tile = document.createElement('p');
-    tile.classList.add('tile');
-    tile.classList.add('tile-' + nextTileType);
+    var tile = createTileElement(nextTileType);
     $nextTile.append(tile);
 }
 
@@ -57,6 +75,7 @@ function updateCurrentTileType() {
     currentTile.type -= 1;
     currentTile.hasChanged = true;
     currentTile.tile.classList.add(`tile-${currentTile.type}`);
+    $tileList.querySelector('.tile.highlight').classList.add('changed');
 }
 
 /**
@@ -76,6 +95,7 @@ function moveTile() {
         flickerTile(currentTile).then(() => {
             checkComboLineCompletion(currentTile).then(() => {
                 createTile();
+                highlightTile(); 
                 setNextTileType();
                 isGamePerformingAnimation = false;
             });

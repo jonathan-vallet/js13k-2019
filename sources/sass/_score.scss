@@ -3,6 +3,7 @@
     color: #eee;
     font: bold 20px sans-serif;
     transition: color 0.2s ease;
+    text-align: right;
 
     &.updated {
         animation: bump .5s cubic-bezier(0.45, 0, 0.45, 1.5);

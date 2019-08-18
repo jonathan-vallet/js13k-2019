@@ -3,16 +3,16 @@
     width: 1.5 * $tile-size;
     height: 1.5 * $tile-size;
     background: $grid-color;
-  
+
     .tile {
-      margin: 0.25 * $tile-size;
+        margin: 0.25 * $tile-size;
     }
 
     &:empty {
-      transform: scale(0);
+        transform: scale(0);
     }
 
     &:not(:empty) {
-      animation: expand .5s cubic-bezier(0.45, 0, 0.45, 1.5);
+        animation: expand .5s cubic-bezier(0.45, 0, 0.45, 1.5);
     }
-  }
+}

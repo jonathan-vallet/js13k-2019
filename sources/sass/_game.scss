@@ -1,170 +1,129 @@
 * {
-  margin: 0;
-  padding: 0;
-  &, 
-  &::before,
-  &::after {
-    box-sizing: border-box;
-  }
+    margin: 0;
+    padding: 0;
+    &, 
+    &::before,
+    &::after {
+        box-sizing: border-box;
+    }
 }
 
 html {
-  height: 100%;
+    height: 100%;
 }
 
 body {
-  height: 100%;
-  background: $background-color;
+    height: 100%;
+    background: $background-color;
 
-  &:not(.paused) {
-    #menu {
-      display: none;
+    &:not(.paused) {
+        #menu {
+            display: none;
+        }
     }
-  }
 }
 
-$tile-size: 40px;
-
 #game {
-  display: flex;
-  align-content: center;
-  justify-content: space-around;
-  height: 100%;
-  width: 50%;
-  margin: 0 auto;
-  overflow: hidden;
+    display: flex;
+    align-content: center;
+    justify-content: space-around;
+    height: 100%;
+    width: 70%;
+    margin: 0 auto;
+    overflow: hidden;
 }
 
 #grid {
-  position: relative;
-  width: 15 * $tile-size;
-  height: 25 * $tile-size;
-  margin: auto;
-  overflow: hidden;
-  background: $grid-color;
+    position: relative;
+    width: 15 * $tile-size;
+    height: 25 * $tile-size;
+    margin: auto;
+    overflow: hidden;
+    background: $grid-color;
 
-  &.added-tile {
-    animation: addedTile 0.2s;
-  }
+    &.added-tile {
+        animation: addedTile 0.2s;
+    }
 
-  &.added-tile-speed {
-    animation: addedTileSpeed 0.2s;
-  }
+    &.added-tile-speed {
+        animation: addedTileSpeed 0.2s;
+    }
 }
 
 #left {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  width: $tile-size * 1.5;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: $tile-size * 2.5;
 }
 
 #right {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: $tile-size * 1.5;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: $tile-size * 2.5;
 }
 
 #tile-list {
-  width: 1.5 * $tile-size;
-  display: flex;
-  flex-direction: column-reverse;
+    width: 1.5 * $tile-size;
+    display: flex;
+    flex-direction: column-reverse;
 
-  .tile {
-    position: relative;
-    margin: $tile-size / 4;
-    animation: expand .5s cubic-bezier(0.45, 0, 0.45, 1.5);
-  }
+    .tile {
+        position: relative;
+        margin: $tile-size / 4;
+        animation: expand .5s cubic-bezier(0.45, 0, 0.45, 1.5);
+        
+        &.highlight {
+            &::before {
+                content: '';
+                display: block;
+                width: $tile-size * 1.4;
+                height: $tile-size * 1.4;
+                position: absolute;
+                top: -$tile-size * 0.2;
+                left: -$tile-size * 0.2;
+                background: rgba(100, 255, 100, 0.5);
+                z-index: -1;
+                border-radius: $tile-size / 10;
+                transition: all 0.2s ease;
+            }
+            &::after {
+                content: '';
+                display: block;
+                width: 0;
+                height: 0;
+                position: absolute;
+                top: $tile-size * 1.2;
+                left: $tile-size * 0.25;
+                border-style: solid;
+                border-width: #{$tile-size * 0.25} #{$tile-size * 0.25} 0 #{$tile-size * 0.25};
+                border-color: rgba(100, 255, 100, 0.5) transparent transparent transparent;
+                z-index: -1;
+                transition: opacity 0.2s ease;
+            }
+
+            &.tile-1,
+            &.tile-0,
+            &.changed {
+                &::before {
+                    transform: translateY(#{$tile-size * 1.5});
+                    background: rgba(255, 100, 100, 0.5);
+                }
+
+                &::after {
+                    transform: translateY(#{$tile-size * 1.5});
+                    opacity: 0;
+                    border-width: 0;
+                }
+            }
+        }
+    }
 }
 
-.tile {
-  position: absolute;
-  display: flex;
-  width: $tile-size;
-  height: $tile-size;
-  border: 1px solid #6b6b6b;
-  background: #333;
-  transition: top 0.1s ease, left 0.1s ease, right 0.1s ease, opacity 0.2s ease, transform 0.2s ease;
-
-  &::before {
-    content: '';
-    display: block;
-    margin: auto;
-  }
-
-  // Cross / Blocker
-  &-0 {
-    border: none;
-    background: #c61111;
-    
-    &::before, &::after {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      content: ' ';
-      height: 80%;
-      width: 10%;
-      background-color: #333;
-    }
-
-    &::before {
-      transform: translate(-50%, -50%) rotate(45deg);
-    }
-
-    &::after {
-      transform: translate(-50%, -50%) rotate(-45deg);
-    }
-  }
-  
-  // Square
-  &-1 {
-    &::before {
-      width: 50%;
-      height: 50%;
-      border: #{$tile-size / 10} solid #c61111;
-    }
-  }
-  
-  // Circle
-  &-2 {
-    &::before {
-      width: 50%;
-      height: 50%;
-      border: #{$tile-size / 10} solid #8dc611;
-      border-radius: 50%;
-    }
-  }
-
-  // Triangle
-  &-3 {
-    &::before {
-      width: 0; 
-      height: 0; 
-      border-left: #{$tile-size / 4} solid transparent;
-      border-right: #{$tile-size / 4} solid transparent;
-      border-bottom: #{$tile-size / 2.5} solid #4545f1;
-    }
-  }
-
-  // Rectangle
-  &-4 {
-    &::before {
-      width: 30%; 
-      height: 75%; 
-      border: #{$tile-size / 10} solid #6dbae4;
-    }
-  }
-
-  &.removed {
-    opacity: 0;
-  }
-
-  &.added-tile {
-    animation: flicker 0.5s ease;
-  }
-
-  &.added-tile-success {
-    animation: flicker 0.25s ease 2;
-  }
+.ui {
+    color: #fff;
+    font: bold 14px/1.4 sans-serif;
+    font-variant: small-caps;
+    letter-spacing: 2px;
 }

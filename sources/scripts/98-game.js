@@ -35,6 +35,7 @@ function startGame() {
     updateAvailableTileList();
     setNextTileType();
     createTile();
+    highlightTile(); 
     setNextTileType();
     loop();
 }
@@ -75,12 +76,6 @@ function setTutorialGrid() {
     setNextTileType(2);
 }
 
-var lineCompletionPromise = new Promise(function(resolve, reject) {
-    setTimeout(function() {
-      resolve('foo');
-    }, 3000);
-  });
-
 async function checkComboLineCompletion(tile) {
     const isLineCompleted = await checkLineCompletion(tile);
     if(isLineCompleted) {
@@ -96,8 +91,6 @@ async function checkComboLineCompletion(tile) {
                 })
             }
         }
-    } else {
-        console.log('no line completed');
     }
 }
 
@@ -156,10 +149,8 @@ function updateScore(tileType) {
 function updateAvailableTileList() {
     $tileList.innerHTML = '';
     for(var index = 0; index <= TILE_NUMBER; ++index) {
-        var tile = document.createElement('p');
-        tile.classList.add('tile');
-        tile.classList.add('tile-' + index);
-        $tileList.append(tile);
+        var $tile = createTileElement(index);
+        $tileList.append($tile);
     }
 }
 

@@ -26,12 +26,12 @@ function initKeys() {
                 break;
             case 38: // Top
                 // Tile can change once and not from starter form
-                if(currentTile.hasChanged || currentTile.type <= 1) {
+                if(currentTile.hasChanged || currentTile.type <= 1 || isGamePaused) {
                     return; 
                 }
                 updateCurrentTileType();
                 break;
-            case 40: // Bottom
+            case 40: // Bottom 
                 isMovingDown = true;
                 break;
 
@@ -42,8 +42,9 @@ function initKeys() {
                     pauseGame();
                 }
                 break;
-            }
+        }
     };
+
     document.onkeyup = function(e) {
         switch (e.which) {
             case 37: // Left
