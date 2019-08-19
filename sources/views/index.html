@@ -4,7 +4,7 @@
     <title>My JS13K Game</title>
     <link rel="stylesheet" href="css/style.css" inline>
 </head>
-<body class="paused">
+<body class="not-started">
     <div id="game">
         <div id="left">
             <p class="ui">Score:</p>
@@ -13,8 +13,10 @@
         <div id="grid">
             <div id="tuto-highlight"></div>
             <div id="menu">
-                <p id="menu-play">Play</p>
+                <p id="menu-play" class="menu-start">Play</p>
                 <p id="menu-tutorial">Tutorial</p>
+                <p id="menu-resume">Resume</p>
+                <p id="menu-restart" class="menu-start">Restart</p>
             </div>
         </div>
         <div id="right">

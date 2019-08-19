@@ -16,8 +16,26 @@ body {
     height: 100%;
     background: $background-color;
 
-    &:not(.paused) {
+    &.not-started {
+        .ui {
+            transform: scale(0);
+        }
+
+        #menu-resume,
+        #menu-restart {
+            display: none;
+        }
+    }
+
+    &:not(.not-started):not(.paused) {
         #menu {
+            display: none;
+        }
+    }
+
+    &.paused {
+        #menu-play,
+        #menu-tutorial {
             display: none;
         }
     }
@@ -125,4 +143,5 @@ body {
     font: bold 14px/1.4 sans-serif;
     font-variant: small-caps;
     letter-spacing: 2px;
+    transition: transform 0.5s ease;
 }

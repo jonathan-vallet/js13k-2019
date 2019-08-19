@@ -3,7 +3,16 @@ function initKeys() {
         startGame();
         unpauseGame();
     });
+
+    $restart.addEventListener('click', () => {
+        startGame();
+        unpauseGame();
+    });
     
+    $resume.addEventListener('click', () => {
+        unpauseGame();
+    });
+
     $tutorialLink.addEventListener('click', () => {
         setTutorialGrid();
         startGame();

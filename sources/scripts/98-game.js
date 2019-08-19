@@ -31,6 +31,8 @@ function initGame() {
 
 function startGame() {
     isGameStarted = true;
+    document.body.classList.remove('not-started');
+    emptyGrid();
     $score.innerText = 0;
     updateAvailableTileList();
     setNextTileType();
@@ -38,6 +40,10 @@ function startGame() {
     highlightTile(); 
     setNextTileType();
     loop();
+}
+
+function emptyGrid() {
+    var tileList = $grid.querySelectorAll('.tile').forEach(el => el.remove());
 }
 
 function pauseGame() {

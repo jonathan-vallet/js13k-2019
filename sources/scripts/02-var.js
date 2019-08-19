@@ -46,6 +46,8 @@ var $score = $('score');
 var $tileList = $('tile-list');
 var $nextTile = $('next-tile');
 var $play = $('menu-play');
+var $restart = $('menu-restart');
+var $resume = $('menu-resume');
 var $tutorialLink = $('menu-tutorial');
 
 var isGameStarted = false;

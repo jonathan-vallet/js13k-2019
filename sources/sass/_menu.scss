@@ -14,6 +14,8 @@
 
 
 #menu-play,
+#menu-resume,
+#menu-restart,
 #menu-tutorial {
   display: block;
   position: relative;
@@ -31,7 +33,8 @@
   }
 }
 
-#menu-play {
+#menu-play,
+#menu-resume {
   padding: 15px 25px;
   border: 4px solid #e55743;
   color: #e55743;
