@@ -65,6 +65,7 @@ function setNextTileType(forcedType) {
 function setTilePosition(tile) {
     tile.tile.style.left = (tile.x * TILE_SIZE) + 'px';
     tile.tile.style.top = ((GRID_HEIGHT - tile.y - 1) * TILE_SIZE) + 'px';
+    moveGhost();
 }
 
 /**
@@ -87,7 +88,6 @@ function moveTile() {
     if(currentTile.y < 0 || grid[currentTile.x][currentTile.y] !== null) {
         currentTile.y += 1;
 
-        console.log('collision!'); 
         if(currentTile.y >= GRID_HEIGHT) {
             gameOver();
         }
@@ -106,6 +106,18 @@ function moveTile() {
     } else {
         setTilePosition(currentTile);
     }
+}
+
+function moveGhost() {
+    for(var y = GRID_HEIGHT; y > 0; --y) {
+        if(grid[currentTile.x][y - 1] !== null) {
+            break;
+        }
+    }
+    $ghost.style.display = '';
+    $ghost.style.left = (currentTile.x * TILE_SIZE) + 'px';
+    console.log(currentTile.y, y);
+    $ghost.style.top = ((GRID_HEIGHT - Math.min(currentTile.y, y) - 1) * TILE_SIZE) + 'px';
 }
 
 /**

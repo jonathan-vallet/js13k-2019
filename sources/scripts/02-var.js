@@ -49,6 +49,7 @@ var $play = $('menu-play');
 var $restart = $('menu-restart');
 var $resume = $('menu-resume');
 var $tutorialLink = $('menu-tutorial');
+var $ghost = $('ghost');
 
 var isGameStarted = false;
 var grid = {

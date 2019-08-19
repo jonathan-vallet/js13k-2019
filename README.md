@@ -26,14 +26,12 @@ Your game.zip file will be generated in `/dist` folder.
 
 ### Gameplay
 
-* Fix animation delay and movement available
 * Add ghost
 * Add monetisation
 * Add customize game options (speed, ghost on/off, grid size...) for accessibility
 
 ### UI
 
-* Change menu when paused (restart/resume with confirm)
 * Improve resize, add mobile support and orientation detection
 * Correctly hide/display elements when game not started
 

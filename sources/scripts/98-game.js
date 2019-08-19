@@ -32,7 +32,7 @@ function initGame() {
 function startGame() {
     isGameStarted = true;
     document.body.classList.remove('not-started');
-    emptyGrid();
+    initGrid();
     $score.innerText = 0;
     updateAvailableTileList();
     setNextTileType();
@@ -40,10 +40,6 @@ function startGame() {
     highlightTile(); 
     setNextTileType();
     loop();
-}
-
-function emptyGrid() {
-    var tileList = $grid.querySelectorAll('.tile').forEach(el => el.remove());
 }
 
 function pauseGame() {
@@ -60,8 +56,12 @@ function unpauseGame() {
 }
 
 function initGrid() {
+    // Removes tile from DOM
+    var tileList = $grid.querySelectorAll('.tile').forEach(el => el.remove());
+    // Resets grid size
     $grid.style.width = (GRID_WIDTH * TILE_SIZE) + 'px';
     $grid.style.height = (GRID_HEIGHT * TILE_SIZE) + 'px';
+    // Resets grid content
     for (var x = 0; x < GRID_WIDTH; ++x) {
         grid[x]=[];
         for (var y = 0; y < GRID_HEIGHT; ++y) {    
@@ -265,8 +265,8 @@ function loop() {
         }
 
         if(updatePosition) {
-            console.log('move tile');
             moveTile();
+            moveGhost();
         }
     }
 
