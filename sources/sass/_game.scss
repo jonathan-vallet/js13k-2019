@@ -30,7 +30,6 @@ body {
     height: 800px;
     width: 800px;
     margin: 0 auto;
-    overflow: hidden;
 }
 
 #grid {
@@ -43,12 +42,10 @@ body {
 
     &.added-tile {
         animation: addedTile 0.2s;
-        animation-delay: 0.4s;
     }
 
     &.added-tile-speed {
         animation: addedTileSpeed 0.2s;
-        animation-delay: 0.4s;
     }
 }
 

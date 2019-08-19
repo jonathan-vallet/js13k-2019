@@ -21,3 +21,32 @@ Project will be generated in `/www` folder.
 run `gulp --production && gulp zip`
 
 Your game.zip file will be generated in `/dist` folder.
+
+## TODO list
+
+### Gameplay
+
+* Fix animation delay and movement available
+* Add ghost
+* Add monetisation
+* Add customize game options (speed, ghost on/off, grid size...) for accessibility
+
+### UI
+
+* Change menu when paused (restart/resume with confirm)
+* Improve resize, add mobile support and orientation detection
+* Correctly hide/display elements when game not started
+
+### "Juice"
+
+* Improve effect when tile go on floor
+* Improve effect for line completion and combos
+* Add visual effect for scoring when line is completed
+* Improve visual effect when a new tile is available
+* Add animation for next tile/tile go on screen
+* Add animations on game start
+
+### Sound
+* Add SFX when tile move, is set on floor, speed up, line completed...
+* Add SFX for buttons click/hover?
+* Add global music

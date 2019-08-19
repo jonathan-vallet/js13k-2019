@@ -226,7 +226,8 @@ function loop() {
     var updatePosition = false;
     if(!isGamePaused && !isGamePerformingAnimation) {
         var now = Date.now();
-        var speed = isMovingDown ? downAcceleratedSpeedDelay : downSpeedDelay;
+
+        // Checks movement on left or right
         if(!lastMoveTime || now - lastMoveTime >= moveSpeedDelay) {
             lastMoveTime = now;
             if(isMovingLeft) {
@@ -243,13 +244,22 @@ function loop() {
                 }
             }
         }
-        if(!lastDownTime || now - lastDownTime >= speed) {
+        
+        // Checks movement down
+        var downSpeed = isMovingDown ? downAcceleratedSpeedDelay : downSpeedDelay;
+        if(!lastDownTime || now - lastDownTime >= downSpeed) {
             lastDownTime = now;
             currentTile.y -= 1;
             updatePosition = true;
+            if(isMovingDown) {
+                currentTile.tile.classList.add('speed');
+            } else {
+                currentTile.tile.classList.remove('speed');
+            }
         }
 
         if(updatePosition) {
+            console.log('move tile');
             moveTile();
         }
     }

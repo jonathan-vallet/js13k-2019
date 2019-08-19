@@ -1,3 +1,6 @@
+$tileDownSpeed: 800ms;
+$tileDownSpeedIncreased: 200ms;
+
 .tile {
     position: absolute;
     display: flex;
@@ -6,8 +9,12 @@
     border: 1px solid #6b6b6b;
     border-radius: 4px;
     background: #333;
-    transition: top 0.5s ease, left 0.1s ease, right 0.1s ease, opacity 0.2s ease, transform 0.2s ease;
+    transition: top $tileDownSpeed ease, left 0.1s ease, right 0.1s ease, opacity 0.2s ease, transform 0.2s ease;
     box-shadow: inset 0px 0px 3px 0px rgba(0,0,0,0.8);
+
+    &.speed {
+        transition: top $tileDownSpeedIncreased ease, left 0.1s ease, right 0.1s ease, opacity 0.2s ease, transform 0.2s ease;
+    }
 
     .tile-shape {
         display: flex;
@@ -248,12 +255,10 @@
   
     &.added-tile {
         animation: flicker 0.5s ease;
-        animation-delay: 0.4s;
     }
   
     &.added-tile-success {
         animation: flicker 0.25s ease 2;
-        animation-delay: 0.4s;
     }
 }
   

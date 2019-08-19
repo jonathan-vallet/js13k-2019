@@ -82,9 +82,12 @@ function updateCurrentTileType() {
  * Moves current tile
  */
 function moveTile() {
-    setTilePosition(currentTile);
     // Checks collision
-    if(currentTile.y <= 0 || grid[currentTile.x][currentTile.y - 1] !== null) {
+    //if(currentTile.y <= 0 || grid[currentTile.x][currentTile.y - 1] !== null) {
+    if(currentTile.y < 0 || grid[currentTile.x][currentTile.y] !== null) {
+        currentTile.y += 1;
+
+        console.log('collision!'); 
         if(currentTile.y >= GRID_HEIGHT) {
             gameOver();
         }
@@ -100,6 +103,8 @@ function moveTile() {
                 isGamePerformingAnimation = false;
             });
         });
+    } else {
+        setTilePosition(currentTile);
     }
 }
 
