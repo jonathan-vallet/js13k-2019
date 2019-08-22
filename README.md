@@ -26,9 +26,10 @@ Your game.zip file will be generated in `/dist` folder.
 
 ### Gameplay
 
-* Add ghost
 * Add monetisation
 * Add customize game options (speed, ghost on/off, grid size...) for accessibility
+* Improve shape unlock with score
+* Improve randomization (increase chances if player has a line almost completed)
 
 ### UI
 
@@ -48,3 +49,9 @@ Your game.zip file will be generated in `/dist` folder.
 * Add SFX when tile move, is set on floor, speed up, line completed...
 * Add SFX for buttons click/hover?
 * Add global music
+
+### Bonus
+
+* Remove one kind of blocks
+* Make a tile back to previous tile
+* Remove a line

@@ -25,8 +25,13 @@ const wait = ms => new Promise((resolve) => setTimeout(resolve, ms));
 function initGame() {
     //playMusic();
     checkSize();
+    checkSubscription();
     initGrid();
     initKeys();
+}
+
+function checkSubscription() {
+    document.body.classList.add((document.monetization && document.monetization.state === 'started') ? 'subscriber' : 'not-subscriber');
 }
 
 function startGame() {
