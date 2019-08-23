@@ -9,3 +9,41 @@
         animation: bump .5s cubic-bezier(0.45, 0, 0.45, 1.5);
     }
 }
+
+#line-score {
+    position: absolute;
+    bottom: 90%;
+    left: 50%;
+    transform: translateX(-50%) scale(3);
+    color: #eee;
+    font: bold 0px sans-serif;
+    opacity: 0;
+
+    &.moving {
+        bottom: 0;
+        left: -125px;
+        transform: translateX(-50%);
+        font-size: 20px;
+        transition: bottom 0.5s ease-in 0.5s, left 0.5s ease-out 0.5s, transform 0.2s ease 0.5s, opacity 0.2s ease, font 0.2s ease;
+        animation: scoreOpacity 1s ease-out;
+    }
+/*
+    &.moving {
+        transition: bottom 0.5s ease-in 0.3s, left 0.5s ease-out 0.3s, transform 0.5s ease-in 0.3s, opacity 0.5s ease-in 0.3s;
+    }*/
+}
+
+@keyframes scoreOpacity {
+    0% {
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+   }

@@ -68,7 +68,6 @@ body {
     width: 15 * $tile-size;
     height: 25 * $tile-size;
     margin: auto;
-    overflow: hidden;
     background: $grid-color;
 
     &.added-tile {

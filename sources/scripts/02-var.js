@@ -3,9 +3,11 @@ var $ = function( id ) { return document.getElementById( id ); };
 
 const TILE_SIZE = 40;
 const MAX_TILE_NUMBER = 9;
+var SCORE_STEP_MULTIPLIER = 250;
 var TILE_NUMBER = 2;
 var GRID_HEIGHT = 20;
 var GRID_WIDTH = 10;
+var GRID_WIDTH = 4;
 
 const TUTORIAL_GRID = {
     '0-0': 2,
@@ -50,6 +52,7 @@ var $restart = $('menu-restart');
 var $resume = $('menu-resume');
 var $tutorialLink = $('menu-tutorial');
 var $ghost = $('ghost');
+var $lineScore = $('line-score');
 
 var isGameStarted = false;
 var grid = {

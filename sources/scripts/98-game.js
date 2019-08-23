@@ -131,11 +131,11 @@ async function checkLineCompletion(tile) {
     if(isLineCompleted(tile)) {
         // Removes all line tiles
         showRemoveLineAnimation();
+        updateScore(tile.type);
         await wait(1000);
     
         removeLine(); // Removes line from grid after animation end
         updateTilesPosition();
-        updateScore(tile.type);
         await wait(300);
         return true;
     }
@@ -145,16 +145,27 @@ async function checkLineCompletion(tile) {
 
 function updateScore(tileType) {
     var tileBaseScore = Math.max(1, tileType); // For blockers, uses square scoer instead of 0
-    score += 5 * adjacentTileList.length * GRID_WIDTH * tileBaseScore;
+    var points = 5 * adjacentTileList.length * GRID_WIDTH * tileBaseScore;
+    score += points;
+    $lineScore.classList.remove('moving');
+    $lineScore.offsetWidth;
+    $lineScore.innerText = points;
+    $lineScore.classList.add('moving');
+
     $score.classList.add('updated');
     $score.offsetWidth;
     $score.innerText = score;
-    var newTileNumber = Math.min(MAX_TILE_NUMBER, Math.floor(score / 750) + 2);
-    if(newTileNumber > TILE_NUMBER) {
-        TILE_NUMBER = newTileNumber;
-        updateAvailableTileList();
+    // Checks if we have to unlock next step
+    if(TILE_NUMBER < MAX_TILE_NUMBER) {
+        var nextScoreStep = 0;
+        for(var step = 0; step <= TILE_NUMBER; ++step) {
+            nextScoreStep += SCORE_STEP_MULTIPLIER * step * TILE_NUMBER;
+        }
+        if(score >= nextScoreStep) {
+            ++TILE_NUMBER;
+            updateAvailableTileList();
+        }
     }
-//    $score.classList.remove('updated');
 }
 
 function updateAvailableTileList() {
