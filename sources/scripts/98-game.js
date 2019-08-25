@@ -147,14 +147,16 @@ function updateScore(tileType) {
     var tileBaseScore = Math.max(1, tileType); // For blockers, uses square scoer instead of 0
     var points = 5 * adjacentTileList.length * GRID_WIDTH * tileBaseScore;
     score += points;
+
+    $lineScore.innerText = points;
     $lineScore.classList.remove('moving');
     $lineScore.offsetWidth;
-    $lineScore.innerText = points;
     $lineScore.classList.add('moving');
 
-    $score.classList.add('updated');
-    $score.offsetWidth;
     $score.innerText = score;
+    $score.classList.remove('updated');
+    $score.offsetWidth;
+    $score.classList.add('updated');
     // Checks if we have to unlock next step
     if(TILE_NUMBER < MAX_TILE_NUMBER) {
         var nextScoreStep = 0;
@@ -236,7 +238,6 @@ function getAdjacentTiles(tileX, tileY, type) {
     }
 }
 
-
 function gameOver() {
     isgameOver = true;
 }
@@ -246,7 +247,8 @@ function gameOver() {
  */
 function loop() {
     var updatePosition = false;
-    if(!isGamePaused && !isGamePerformingAnimation) {
+    console.log()
+    if(!isGamePaused && !isGamePerformingAnimation && !isgameOver) {
         var now = Date.now();
 
         // Checks movement on left or right

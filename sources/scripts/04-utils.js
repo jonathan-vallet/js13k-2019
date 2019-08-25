@@ -4,6 +4,7 @@
  * Checks the size of screen to simulate a "conain" size for all elements
  */
 function checkSize() {
+    return;
     var ww = window.innerWidth;
     var wh = window.innerHeight;
 

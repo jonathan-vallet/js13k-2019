@@ -6,8 +6,7 @@ const MAX_TILE_NUMBER = 9;
 var SCORE_STEP_MULTIPLIER = 250;
 var TILE_NUMBER = 2;
 var GRID_HEIGHT = 20;
-var GRID_WIDTH = 10;
-var GRID_WIDTH = 4;
+var GRID_WIDTH = 11;
 
 const TUTORIAL_GRID = {
     '0-0': 2,

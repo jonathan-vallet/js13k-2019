@@ -3,6 +3,7 @@
     width: 1.5 * $tile-size;
     height: 1.5 * $tile-size;
     background: $grid-color;
+    margin: 0 auto;
 
     .tile {
         margin: 0.25 * $tile-size;

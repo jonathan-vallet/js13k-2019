@@ -87,8 +87,8 @@ function moveTile() {
     //if(currentTile.y <= 0 || grid[currentTile.x][currentTile.y - 1] !== null) {
     if(currentTile.y < 0 || grid[currentTile.x][currentTile.y] !== null) {
         currentTile.y += 1;
-
-        if(currentTile.y >= GRID_HEIGHT) {
+        
+        if(currentTile.y >= GRID_HEIGHT - 1) {
             gameOver();
         }
 
