@@ -22,8 +22,6 @@
  *    distribution.
  *
  */
-/*
-"use strict";
 
 var CPlayer = function() {
 
@@ -341,4 +339,3 @@ var CPlayer = function() {
         return d;
     };
 };
-*/

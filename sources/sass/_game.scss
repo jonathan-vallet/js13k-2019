@@ -141,11 +141,11 @@ body {
                 width: 0;
                 height: 0;
                 position: absolute;
-                top: $tile-size * 1.2;
+                bottom: $tile-size * 1.15;
                 left: $tile-size * 0.25;
                 border-style: solid;
-                border-width: #{$tile-size * 0.25} #{$tile-size * 0.25} 0 #{$tile-size * 0.25};
-                border-color: rgba($secondary-color, 0.5) transparent transparent transparent;
+                border-width: 0 #{$tile-size * 0.25} #{$tile-size * 0.25} #{$tile-size * 0.25};
+                border-color: transparent transparent rgba($secondary-color, 0.5) transparent;
                 z-index: -1;
                 transition: opacity 0.2s ease;
             }
@@ -166,7 +166,7 @@ body {
             
             &.changed {
                 &::before {
-                    transform: translateY(#{$tile-size * 1.5});
+                    transform: translateY(-#{$tile-size * 1.5});
                 }
             }
         }

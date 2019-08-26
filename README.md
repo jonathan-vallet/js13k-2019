@@ -28,19 +28,16 @@ Your game.zip file will be generated in `/dist` folder.
 
 * Add monetisation
 * Add customize game options (speed, ghost on/off, grid size...) for accessibility
-* Improve shape unlock with score
 * Improve randomization (increase chances if player has a line almost completed)
 
 ### UI
 
 * Improve resize, add mobile support and orientation detection
-* Correctly hide/display elements when game not started
 
 ### "Juice"
 
 * Improve effect when tile go on floor
 * Improve effect for line completion and combos
-* Add visual effect for scoring when line is completed
 * Improve visual effect when a new tile is available
 * Add animation for next tile/tile go on screen
 * Add animations on game start

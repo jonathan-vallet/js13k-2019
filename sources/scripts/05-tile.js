@@ -96,7 +96,7 @@ function moveTile() {
         shakeScreen();
         isGamePerformingAnimation = true;
         flickerTile(currentTile).then(() => {
-            checkComboLineCompletion(currentTile).then(() => {
+            checkComboLineCompletion(currentTile, 0).then(() => {
                 createTile();
                 highlightTile(); 
                 setNextTileType();

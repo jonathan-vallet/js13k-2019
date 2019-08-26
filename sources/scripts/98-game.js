@@ -87,19 +87,19 @@ function setTutorialGrid() {
     setNextTileType(2);
 }
 
-async function checkComboLineCompletion(tile) {
-    const isLineCompleted = await checkLineCompletion(tile);
+async function checkComboLineCompletion(tile, comboLineNumber) {
+    const isLineCompleted = await checkLineCompletion(tile, ++comboLineNumber);
     if(isLineCompleted) {
         // Checks is another line is ended after having removed first one
         // As a line must be completed, just checks first column tiles
         for (var y = 0; y < GRID_HEIGHT; ++y) {
             // Ignores empty and blocking tiles (cannot be completed as second tile)
             if(grid[0][y] !== null && grid[0][y] !== 0) {
-                await checkLineCompletion({
+                await checkComboLineCompletion({
                     x: 0,
                     y,
                     type: grid[0][y]
-                })
+                }, comboLineNumber);
             }
         }
     }
@@ -126,12 +126,12 @@ function isLineCompleted(checkedTile) {
     return isStartJoined && isEndJoined;
 }
 
-async function checkLineCompletion(tile) {
+async function checkLineCompletion(tile, comboLineNumber) {
     // Line is completed
     if(isLineCompleted(tile)) {
         // Removes all line tiles
         showRemoveLineAnimation();
-        updateScore(tile.type);
+        updateScore(tile.type, comboLineNumber);
         await wait(1000);
     
         removeLine(); // Removes line from grid after animation end
@@ -143,12 +143,12 @@ async function checkLineCompletion(tile) {
     return false;
 }
 
-function updateScore(tileType) {
+function updateScore(tileType, comboLineNumber) {
     var tileBaseScore = Math.max(1, tileType); // For blockers, uses square scoer instead of 0
-    var points = 5 * adjacentTileList.length * GRID_WIDTH * tileBaseScore;
+    var points = 5 * adjacentTileList.length * GRID_WIDTH * tileBaseScore * comboLineNumber;
     score += points;
 
-    $lineScore.innerText = points;
+    $lineScore.innerHTML = (comboLineNumber > 1 ? `Combo x${comboLineNumber}<br />` : '') + points;
     $lineScore.classList.remove('moving');
     $lineScore.offsetWidth;
     $lineScore.classList.add('moving');
@@ -172,7 +172,7 @@ function updateScore(tileType) {
 
 function updateAvailableTileList() {
     $tileList.innerHTML = '';
-    for(var index = 0; index <= TILE_NUMBER; ++index) {
+    for(var index = TILE_NUMBER; index >= 0 ; --index) {
         var $tile = createTileElement(index);
         $tileList.append($tile);
     }
@@ -295,3 +295,22 @@ function loop() {
 
 // Let's the game start!
 initGame();
+
+var audio = document.createElement("audio");
+var musicplayer = new CPlayer();
+musicplayer.init(tileOnFloorSound);
+
+while (musicplayer.generate() < 1) { }
+var wave = musicplayer.createWave();
+
+audio.src = URL.createObjectURL(new Blob([wave], {type: "audio/wav"}));
+
+function playMusic() {
+    audio.play();
+    audio.loop = true;
+}
+
+function stopMusic() {
+    audio.pause();
+}
+playMusic();
