@@ -1,5 +1,6 @@
 // Music data
 // Use http://sb.bitsnbites.eu/ to generate you music, export you JS and add it here
+/*
 var song = {
         
 };
@@ -53,3 +54,4 @@ var tileOnFloorSound = {
 }
 
 // https://sb.bitsnbites.eu/?data=U0JveAwC7cMxCoAwAASwq4qgg5t7wS92cHP21Vp8hiSQe09XS57WnynXNB_5DFvWmixjaQEAAAAAAID_eAE
+*/

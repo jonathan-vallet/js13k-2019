@@ -114,9 +114,7 @@ function moveGhost() {
             break;
         }
     }
-    $ghost.style.display = '';
     $ghost.style.left = (currentTile.x * TILE_SIZE) + 'px';
-    console.log(currentTile.y, y);
     $ghost.style.top = ((GRID_HEIGHT - Math.min(currentTile.y, y) - 1) * TILE_SIZE) + 'px';
 }
 

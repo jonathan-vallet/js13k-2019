@@ -13,10 +13,55 @@ function initKeys() {
         unpauseGame();
     });
 
-    $tutorialLink.addEventListener('click', () => {
-        setTutorialGrid();
-        startGame();
+    $tutorialStart.addEventListener('click', () => {
+        document.body.classList.remove('tutorial');
         unpauseGame();
+    });
+
+    $('game-over-restart').addEventListener('click', () => {
+        document.body.classList.remove('game-over');
+        isgameOver = false;
+        TILE_NUMBER = 3;
+        startGame();
+    });
+    
+    $tutorialLink.addEventListener('click', () => {
+        startGame(true);
+        document.body.classList.add('tutorial');
+    });
+
+    $('touch-down').addEventListener('touchstart', () => {
+        isMovingDown = true;
+    });
+    $('touch-down').addEventListener('touchend', () => {
+        isMovingDown = false;
+    });
+
+    $('touch-up').addEventListener('touchstart', () => {
+        // Tile can change once and not from starter form
+        if(currentTile.hasChanged || currentTile.type <= 1 || isGamePaused) {
+            return; 
+        }
+        updateCurrentTileType();
+    });
+    $('touch-left').addEventListener('touchstart', () => {
+        if(currentTile.x <= 0 || grid[currentTile.x - 1][currentTile.y] !== null) {
+            return;
+        }
+        isMovingLeft = true;
+    });
+    $('touch-left').addEventListener('touchend', () => {
+        isMovingLeft = false;
+    });
+
+    $('touch-right').addEventListener('touchstart', () => {
+        if(currentTile.x + 1 >= GRID_WIDTH || grid[currentTile.x + 1][currentTile.y] !== null) {
+            return;
+        }
+        isMovingRight = true;
+    });
+    $('touch-right').addEventListener('touchend', () => {
+        isMovingRight = false;
     });
 
     document.onkeydown = function(e) {

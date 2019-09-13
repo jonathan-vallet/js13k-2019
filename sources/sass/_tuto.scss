@@ -13,4 +13,28 @@
     /* border: 800px solid rgba(0, 0, 0, 0.5); */
     box-sizing: content-box;
     -webkit-mask-image: radial-gradient(50px at 50% 50% , transparent 95%, black 100%);
+}
+
+#tutorial {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  padding: 20px;
+  font: normal 16px/1.4 sans-serif;
+  letter-spacing: 1px;
+  color: white;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.65);
+
+  a {
+    color: white;
+    font-weight: bold;
   }
+}
+
+#tutorial-start {
+  display: inline-block;
+  margin-top: 10px;
+}

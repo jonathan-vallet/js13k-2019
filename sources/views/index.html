@@ -2,12 +2,17 @@
 <html lang="fr">
 <head>
     <title>Electro</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
     <meta name="monetization" content="$coil.xrptipbot.com/ca2f6d68-6dd6-4bf5-9215-ce7f4cead6eb">
     <link rel="stylesheet" href="css/style.css" inline>
 </head>
 <body class="not-started">
     <div id="game">
         <div id="left">
+            <div class="touch-control">
+                <div class="touch-arrow left" id="touch-left">left</div>
+                <div class="touch-arrow up" id="touch-up">up</div>
+            </div>
             <div class="block">
                 <p class="ui">Score</p>
                 <div id="score"></div>
@@ -20,8 +25,27 @@
                 <p id="menu-tutorial">Tutorial</p>
                 <p id="menu-resume">Resume</p>
                 <p id="menu-restart" class="menu-start">Restart</p>
-                <p><span class="subscriber-content">Welcome subscriber!</span><span class="not-subscriber-content">Subscribe</span></p>
             </div>
+            <div id="game-over">
+                Game over<br /><br /><br />
+                <p id="game-over-restart">Play again</p>
+            </div>
+            <div id="tutorial">
+                Move with left/right arrows.<br />
+                Speed up tile with down arrow.<br />
+                Press up to go <strong>back</strong> to previous tile type, once per tile.<br /><br />
+                
+                Your goal: Complete lines of shapes from left to right of the grid touching by side or corner.<br/><br/>
+
+                Available tiles are bottom right, current shape is highlight and green if you can transform it.<br /><br />
+
+                TIPS: If you move one left and go back to circle shape, you will clear your first line!<br /><br />
+                <p>
+                    <span class="subscriber-content">Thank you for subscribing, you will have 10% more points and a helper to place your tiles</span>
+                    <span class="not-subscriber-content">You can subscribe on <a href="https://coil.com/" target="_blank">Coil</a> to get more points and a helper to place your tiles</span>
+                    <p id="tutorial-start">Let's go!</p>
+                </p>
+            </div> 
             <p id="ghost"></p>
             <p id="line-score"></p>
         </div>
@@ -29,6 +53,10 @@
             <div class="block">
                 <p class="ui">Next</p>
                 <div id="next-tile"></div>
+            </div>
+            <div class="touch-control">
+                <div class="touch-arrow right" id="touch-right">right</div>
+                <div class="touch-arrow bottom" id="touch-down">down</div>
             </div>
             <div class="block">
                 <p class="ui">Available</p>

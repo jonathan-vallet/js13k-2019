@@ -18,6 +18,11 @@
     color: #eee;
     font: bold 0px sans-serif;
     opacity: 0;
+    text-align: center;
+
+    span {
+        font-size: 70%;
+    }
 
     &.moving {
         bottom: 0;

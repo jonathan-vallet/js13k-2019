@@ -12,11 +12,12 @@
   background: rgba(0, 0, 0, 0.7);
 }
 
-
 #menu-play,
 #menu-resume,
 #menu-restart,
-#menu-tutorial {
+#menu-tutorial,
+#tutorial-start,
+#game-over-restart {
   display: block;
   position: relative;
   margin-top: 15px;
@@ -39,4 +40,21 @@
   border: 4px solid currentColor;
   color: #00ced1;
   font-size: 16px;
+}
+
+#game-over {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  background: rgba(0, 0, 0, 0.7);
+  font: normal 16px/1.4 sans-serif;
+  letter-spacing: 1px;
+  color: white;
 }

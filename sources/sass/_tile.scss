@@ -227,25 +227,27 @@ $tileDownSpeedIncreased: 200ms;
 
     // Heart
     &-9 {
-        &::before,
-        &::after {
-          content: '';
-          position: absolute;
-          top: #{$tile-size / 4};
-          width: #{$tile-size / 3};
-          height: #{$tile-size / 2};
-          background: red;
-          border-radius: #{$tile-size / 3} #{$tile-size / 3} 0 0;
-        }
-        &::before {
-          left: #{$tile-size / 2 - 1px};
-          transform: rotate(-45deg);
-          transform-origin: 0 100%;
-        }
-        &::after {
-            left: #{$tile-size / 4 - 3px};
-            transform: rotate(45deg);
-            transform-origin: 100% 100%;
+        .tile-shape {
+            &::before,
+            &::after {
+            content: '';
+            position: absolute;
+            top: #{$tile-size / 4};
+            width: #{$tile-size / 3};
+            height: #{$tile-size / 2};
+            background: red;
+            border-radius: #{$tile-size / 3} #{$tile-size / 3} 0 0;
+            }
+            &::before {
+            left: #{$tile-size / 2 - 1px};
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+            }
+            &::after {
+                left: #{$tile-size / 4 - 3px};
+                transform: rotate(45deg);
+                transform-origin: 100% 100%;
+            }
         }
     }
 

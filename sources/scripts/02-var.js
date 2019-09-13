@@ -3,10 +3,10 @@ var $ = function( id ) { return document.getElementById( id ); };
 
 const TILE_SIZE = 40;
 const MAX_TILE_NUMBER = 9;
-var SCORE_STEP_MULTIPLIER = 250;
-var TILE_NUMBER = 2;
+var SCORE_STEP_MULTIPLIER = 200;
+var TILE_NUMBER = 3;
 var GRID_HEIGHT = 20;
-var GRID_WIDTH = 11;
+var GRID_WIDTH = 9;
 
 const TUTORIAL_GRID = {
     '0-0': 2,
@@ -18,8 +18,6 @@ const TUTORIAL_GRID = {
     '6-0': 1,
     '7-0': 1,
     '8-0': 2,
-    '8-0': 2,
-    '9-0': 2,
     '0-1': 1,
     '1-1': 2,
     '2-1': 1,
@@ -29,15 +27,11 @@ const TUTORIAL_GRID = {
     '6-1': 2,
     '7-1': 2,
     '8-1': 1,
-    '8-1': 1,
-    '9-1': 1,
     '2-2': 2,
     '0-2': 3,
     '1-2': 3,
-    '4-2': 0,
-    '5-2': 0,
-    '4-3': 1,
-    '5-3': 2,
+    '4-2': 1,
+    '5-2': 2,
 };
 
 // Elements
@@ -49,13 +43,14 @@ var $nextTile = $('next-tile');
 var $play = $('menu-play');
 var $restart = $('menu-restart');
 var $resume = $('menu-resume');
+var $tutorialStart = $('tutorial-start');
 var $tutorialLink = $('menu-tutorial');
 var $ghost = $('ghost');
 var $lineScore = $('line-score');
 
+var isSubscriber = false;
 var isGameStarted = false;
-var grid = {
-}; // The grid content with list of tiles
+var grid = {}; // The grid content with list of tiles
 var adjacentTileList = []; // Used when checking line completion, list of adjacent tiles
 var currentTile; // The current tile played
 var nextTileType; // Preview of next tile type

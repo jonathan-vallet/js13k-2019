@@ -24,6 +24,9 @@ const wait = ms => new Promise((resolve) => setTimeout(resolve, ms));
 
 function initGame() {
     //playMusic();
+    if (!("ontouchstart" in document.documentElement)) {
+        document.querySelectorAll('.touch-control').forEach(el => el.style.display = 'none');
+    }
     checkSize();
     checkSubscription();
     initGrid();
@@ -31,16 +34,26 @@ function initGame() {
 }
 
 function checkSubscription() {
-    document.body.classList.add((document.monetization && document.monetization.state === 'started') ? 'subscriber' : 'not-subscriber');
+    isSubscriber = (document.monetization && document.monetization.state === 'started');
+    document.body.classList.add(isSubscriber ? 'subscriber' : 'not-subscriber');
+    if(!isSubscriber) {
+        $ghost.style.display = 'none';
+    }
+
 }
 
-function startGame() {
+function startGame(isTutorial) {
     isGameStarted = true;
     document.body.classList.remove('not-started');
     initGrid();
     $score.innerText = 0;
     updateAvailableTileList();
-    setNextTileType();
+    if(isTutorial) {
+        setTutorialGrid();
+        setNextTileType(2);
+    } else {
+        setNextTileType();
+    }
     createTile();
     highlightTile(); 
     setNextTileType();
@@ -55,6 +68,8 @@ function pauseGame() {
 function unpauseGame() {
     isGamePaused = false;
     document.body.classList.remove('paused');
+    document.body.classList.remove('tutorial');
+
     if(!isGameStarted) {
         startGame();
     }
@@ -146,9 +161,12 @@ async function checkLineCompletion(tile, comboLineNumber) {
 function updateScore(tileType, comboLineNumber) {
     var tileBaseScore = Math.max(1, tileType); // For blockers, uses square scoer instead of 0
     var points = 5 * adjacentTileList.length * GRID_WIDTH * tileBaseScore * comboLineNumber;
+    if(isSubscriber) {
+        point *= 1.1;
+    }
     score += points;
 
-    $lineScore.innerHTML = (comboLineNumber > 1 ? `Combo x${comboLineNumber}<br />` : '') + points;
+    $lineScore.innerHTML = (comboLineNumber > 1 ? `<span>Combo x${comboLineNumber}</span><br />` : '') + points;
     $lineScore.classList.remove('moving');
     $lineScore.offsetWidth;
     $lineScore.classList.add('moving');
@@ -160,7 +178,7 @@ function updateScore(tileType, comboLineNumber) {
     // Checks if we have to unlock next step
     if(TILE_NUMBER < MAX_TILE_NUMBER) {
         var nextScoreStep = 0;
-        for(var step = 0; step <= TILE_NUMBER; ++step) {
+        for(var step = 0; step < TILE_NUMBER; ++step) {
             nextScoreStep += SCORE_STEP_MULTIPLIER * step * TILE_NUMBER;
         }
         if(score >= nextScoreStep) {
@@ -240,6 +258,7 @@ function getAdjacentTiles(tileX, tileY, type) {
 
 function gameOver() {
     isgameOver = true;
+    document.body.classList.add('game-over');
 }
 
 /*
@@ -247,7 +266,6 @@ function gameOver() {
  */
 function loop() {
     var updatePosition = false;
-    console.log()
     if(!isGamePaused && !isGamePerformingAnimation && !isgameOver) {
         var now = Date.now();
 
@@ -296,6 +314,7 @@ function loop() {
 // Let's the game start!
 initGame();
 
+/*
 var audio = document.createElement("audio");
 var musicplayer = new CPlayer();
 musicplayer.init(tileOnFloorSound);
@@ -313,4 +332,4 @@ function playMusic() {
 function stopMusic() {
     audio.pause();
 }
-playMusic();
+playMusic();*/
